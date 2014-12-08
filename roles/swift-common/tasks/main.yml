@@ -21,6 +21,16 @@
 - name: setup swiftops sudoers
   template: src=etc/sudoers.d/swiftops dest=/etc/sudoers.d/swiftops owner=root group=root mode=0440
 
+- name: create swift log files directory
+  file: dest=/var/log/swift state=directory owner=syslog group=adm mode=0755
+
+- name: send swift logs to local files
+  copy: src=etc/rsyslog.d/49-swift.conf dest=/etc/rsyslog.d/49-swift.conf mode=0644
+  notify: restart rsyslog
+
+- name: log rotate swift log files
+  copy: src=etc/logrotate.d/swift dest=/etc/logrotate.d/swift mode=0644
+
 - name: get swifttool repo
   git: |
     repo=https://github.com/blueboxgroup/swifttool.git
