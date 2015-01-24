@@ -1,7 +1,7 @@
 ---
 cinder:
-  enabled_backends: 
-  default_backend: 
+  enabled_backends:
+  default_backend:
   backends: []
   api_workers: 5
 
