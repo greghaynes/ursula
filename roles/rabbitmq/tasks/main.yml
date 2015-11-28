@@ -46,3 +46,6 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
+
+- name: permit access to rabbitmq
+  ufw: rule=allow to_port={{ rabbitmq.port }} proto=tcp
