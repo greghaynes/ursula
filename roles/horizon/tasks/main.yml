@@ -106,6 +106,15 @@
     - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress"
   when: openstack_install_method == 'package'
 
+- name: add local_settings to venv
+  file: src=/etc/openstack-dashboard/local_settings/py
+        dest={{ openstack_source.virtualenv_base }}/horizon/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
+        owner=root
+        group=root
+        mode=0644
+        state=link
+  when: openstack_install_method == 'source
+
 - name: gather static assets from openstack source install
   environment:
     DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
@@ -113,7 +122,7 @@
   shell: "{{ item }}"
   with_items:
     - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py collectstatic --noinput"
-    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress"
+    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress --force"
   when: openstack_install_method == 'source'
 
 - name: ensure apache started
